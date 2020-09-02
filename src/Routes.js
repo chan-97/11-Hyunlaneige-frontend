@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Main from "../src/Pages/Main/Main";
 import SignUp from "../src/Pages/Login/SignUp";
-import ProductsList from "../src/Pages/ProductsList/ProductList";
+import ProductsList from "./Pages/ProductsList/ProductsList";
 
 class Routes extends React.Component {
   render() {
