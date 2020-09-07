@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import styled from "styled-components";
 import productsConfig from "./productsConfig";
 import CategoryContainer from "./CategoryContainer";
@@ -6,6 +7,7 @@ import SortByContainer from "./SortByContainer";
 import OrderShowAndHide from "./OrderShowAndHide";
 import ListDetails from "./ListDetails";
 import Item from "./Item";
+import Pagination from "./Pagination";
 
 const listHeaderName = {
   category: "카테고리",
@@ -13,17 +15,29 @@ const listHeaderName = {
 };
 
 function ProductsList() {
-  const [productList, setProductList] = useState([]);
   const [isCategoryActive, setIsCategoryActive] = useState(false);
   const [isSortByActive, setIsSortByActive] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage] = useState(16);
 
   useEffect(() => {
-    fetch("http://localhost:3000/Data/mockData/productsList.json")
-      .then((res) => res.json())
-      .then((res) => {
-        setProductList(res.product_list);
-      });
+    const fetchPosts = async () => {
+      const res = await axios.get("/Data/mockData/productsList.json");
+      setPosts(res.data.product_list);
+    };
+
+    fetchPosts();
   }, []);
+
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 320, behavior: "smooth" });
+  };
 
   return (
     <ProductsListOuter>
@@ -54,25 +68,33 @@ function ProductsList() {
               />
               {isSortByActive === false ? null : <OrderShowAndHide />}
             </SortByWrapper>
-            <TotalProducts>스킨케어 {productList.length}개 상품</TotalProducts>
+            <TotalProducts>스킨케어 {posts.length}개 상품</TotalProducts>
           </ListHeader>
-          {isCategoryActive === false ? null : <ListDetails />}
+          {isCategoryActive === false ? null : (
+            <ListDetails
+              handleCategory={() => setIsCategoryActive(!isCategoryActive)}
+            />
+          )}
         </ListHeaderWrapper>
         <ListContainer>
-          {productList &&
-            productList.map((product) => (
-              <Item
-                key={product.product_id}
-                isNew={product.is_new}
-                isBest={product.is_best}
-                image={product.image}
-                hashFirst={product.hash_first}
-                hashSecond={product.hash_second}
-                productName={product.product_name}
-                hover={product.hover}
-              />
-            ))}
+          {currentPosts.map((post) => (
+            <Item
+              key={post.product_id}
+              isNew={post.is_new}
+              isBest={post.is_best}
+              image={post.image}
+              hashFirst={post.hash_first}
+              hashSecond={post.hash_second}
+              productName={post.product_name}
+              hover={post.hover}
+            />
+          ))}
         </ListContainer>
+        <Pagination
+          postsPerPage={postsPerPage}
+          totalPosts={posts.length}
+          paginate={paginate}
+        />
       </ProductsListContainer>
     </ProductsListOuter>
   );

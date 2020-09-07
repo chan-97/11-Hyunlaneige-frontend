@@ -18,6 +18,11 @@ const columnCenter = css`
   flex-direction: column;
 `;
 
+const justifyCenter = css`
+  display: flex;
+  justify-content: center;
+`;
+
 const startSpaceBetween = css`
   display: flex;
   justify-content: space-between;
@@ -34,6 +39,7 @@ const theme = {
   fontGray: "#5F5F5F",
   center,
   centerSpaceBetween,
+  justifyCenter,
   startSpaceBetween,
   columnCenter,
   full,

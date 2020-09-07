@@ -5,10 +5,10 @@ import PartOfType from "./InTheCategory/PartOfType";
 import PartOfWorries from "./InTheCategory/PartOfWorries";
 import PartOfLine from "./InTheCategory/PartOfLine";
 
-function ListDetails() {
+function ListDetails({ handleCategory }) {
   return (
     <ListDetailsOuter>
-      <CloseBtn />
+      <CloseBtn onClick={handleCategory} />
       <Lists>
         <AllList>전체보기</AllList>
         <WrapperOfPart>
@@ -34,7 +34,7 @@ const CloseBtn = styled.div`
   position: absolute;
   top: 15px;
   right: 20px;
-  background-image: url("https://ssl.gstatic.com/translate/2x_mobile.png");
+  background-image: url(${productsConfig.url.CloseIcon});
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center bottom -196px;
